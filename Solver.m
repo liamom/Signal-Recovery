@@ -20,7 +20,7 @@ function r = Solver(timeVals, mesurements)
     a = sym(sym('X%d%d', n),'real');
     
     eq1 = primes(1:n)' == a * mesurements(1:1,:)';
-    eq2 = primes(2:n)' == a * mesurements(2:2,:)';
+    eq2 = primes(n:n+n)' == a * mesurements(2:2,:)';
 
     eqs = [eq1, eq2];
     
