@@ -3,16 +3,22 @@ function r = Solver2(tv, mm)
     n = t(2);% number of variables
     m = t(1); % number of mesurments
     
-    if((n.^2 - 1) ~= m )
-       error('not enough mesurments to calculate'); 
+    if(n >= m )
+       %error('not enough mesurments to calculate'); 
+       %interpolateExtraValues(tv,mm);
     end
 
     primes = zeros(n.^2,1);
-    for i = 1:n.^2
-        j = mod(i-1,n)+1;
-        primes(i) = (mm(j+1) - mm(j))/(tv(j+1) - tv(j));
+    for i = 1:n+1
+       for j = 1:n
+           if(m-1 >= i) 
+            primes(j + n*(i-1)) = (mm(i+1,j) - mm(i,j))/(tv(i+1) - tv(i));
+           else
+            primes(j + n*(i-1)) = interpolateExtraValues(tv,mm, i, j); 
+           end
+       end
     end
-
+    
     matrix = zeros(n.^2);
     
     for i = 0:n-1
@@ -23,4 +29,11 @@ function r = Solver2(tv, mm)
     end
     
     r = linsolve(matrix, primes);
+end
+
+function r = interpolateExtraValues(tv,mm, messurment, variable)
+
+    p = polyfit(tv,  mm( :, variable)', 3);
+    d = polyder(p);
+    r = polyval(d,tv(messurment));
 end
