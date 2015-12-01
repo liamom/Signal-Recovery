@@ -9,9 +9,9 @@ function r = Solver2(tv, mm)
     end
 
     primes = zeros(n.^2,1);
-    for i = 1:n+1
+    for i = 1:n
        for j = 1:n
-           if(m-1 >= i) 
+           if(i<m) 
             primes(j + n*(i-1)) = (mm(i+1,j) - mm(i,j))/(tv(i+1) - tv(i));
            else
             primes(j + n*(i-1)) = interpolateExtraValues(tv,mm, i, j); 
@@ -33,7 +33,8 @@ end
 
 function r = interpolateExtraValues(tv,mm, messurment, variable)
 
-    p = polyfit(tv,  mm( :, variable)', 3);
+    p = polyfit(tv,  mm( :, variable)', 1);
     d = polyder(p);
+    % g = polyval(p,tv(messurment));
     r = polyval(d,tv(messurment));
 end
